@@ -123,12 +123,12 @@ class HalozatGeneraloGrafikusFelulettel:
         self.halozat_tipusa = tk.StringVar(value="teljes")
         halozattipus_vaz = ttk.Frame(halozatgeneralas_vaz)
         halozattipus_vaz.pack(fill='x', pady=(0, 15))
-        ttk.Radiobutton(halozattipus_vaz, text="Teljes hálózat (Minden publikáció figyelembe vétele)", variable=self.halozat_tipusa, value="teljes").pack(anchor='w')
+        ttk.Radiobutton(halozattipus_vaz, text="Teljes hálózat (Minden publikáció figyelembe vétele)", variable=self.halozat_tipusa, value="teljes").pack(anchor='w') #legyen vegyes hálózat (kari és nem kari együttműködések hálózata)
         ttk.Radiobutton(halozattipus_vaz, text="Tanszékekre bontott kari hálózat (Csak a kari szerzők publikációnak figyelembe vételével készül, ahol Tanszékek a csomópontok)", variable=self.halozat_tipusa, value="tanszek_halozat").pack(anchor='w')
         ttk.Radiobutton(halozattipus_vaz, text="Oktatókra bontott kari hálózat (Csak a kari szerzők publikációnak figyelembe vételével készül, ahol a Szerzők a csomópontok)", variable=self.halozat_tipusa, value="Kari_hálózat").pack(anchor='w')
 
         self.csak_valodi_publikaciok = tk.BooleanVar()
-        ttk.Checkbutton(halozatgeneralas_vaz, text="Csak valódi publikációk feldolgozása",
+        ttk.Checkbutton(halozatgeneralas_vaz, text="Csak fontosabb tudományos művek feldolgozása",
                         variable=self.csak_valodi_publikaciok).pack(anchor='w', pady=(10, 5))
         # Év alapú szűrő
         evszures_vaz = ttk.LabelFrame(halozatgeneralas_vaz, text="Év szűrés")
@@ -252,14 +252,14 @@ class HalozatGeneraloGrafikusFelulettel:
             for _, row in kari_adatlap.iterrows():
                 mtid = row[mtid_oszlop]
                 if pd.notna(mtid):
-                    mtid = int(str(mtid)) #python 3.13.7 miatt str wrap
-                    self.karhoz_tartozo_mtidk.add(mtid)
+                    mtid_erteke = int(mtid) #nem lehet string wrap, majd fix., 3.13.7 miatt warning .5-ben jó.
+                    self.karhoz_tartozo_mtidk.add(mtid_erteke)
                     # Excelből a szerzőnevek kivétele és szótárba helyezése
                     excel_szerzo_teljesnev = str(row[nev_oszlop]).strip()
-                    self.kari_szerzonevek[mtid] = excel_szerzo_teljesnev
+                    self.kari_szerzonevek[mtid_erteke] = excel_szerzo_teljesnev
                     # Tanszéknevek kimentése excelből
                     if pd.notna(row[tanszek_oszlop]):
-                        self.kari_tanszekek[mtid] = str(row[tanszek_oszlop]).strip()
+                        self.kari_tanszekek[mtid_erteke] = str(row[tanszek_oszlop]).strip()
 
             # Tanszék beolvasás
             self.Kari_tanszekek_nevei = set(kari_adatlap[tanszek_oszlop].dropna().astype(str).str.strip())

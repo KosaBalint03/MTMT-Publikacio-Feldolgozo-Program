@@ -44,7 +44,7 @@ for index, sor in tisztitott_adatok.iterrows():
 
 #Stringként kezelni a legbiztonságosabb, mert nem felételezem hogy int lesz az adat típusa.
     if str(azonosito) == "10018517": # Ujvári Balázs azonostítója a 2000+ publikáció miatt  10018517
-
+        print(f"A program nem akadt meg, csak átlagosnál több idő szükséges a következő kutató ({azonosito} publikációinak kigyüjtéséhez.") # extra rész, tájékoztatás
         url = url_sablon_nagy_V2.format(azonosito)
     else:
         url = url_sablon_V2.format(azonosito)
