@@ -158,7 +158,7 @@ class HalozatGeneraloGrafikusFelulettel:
         self.halozat_generalas_gomb_vaz = ttk.Button(halozatgeneralas_vaz, text="Hálózat fájl generálása", command=self.halozat_generalas_szalon)
         self.halozat_generalas_gomb_vaz.pack(pady=20)
 
-        # Alma Folyamat csík
+        # Folyamat csík
         self.folyamatcsik_vaz = ttk.Progressbar(halozatgeneralas_vaz, mode='indeterminate')
         self.folyamatcsik_vaz.pack(fill='x', pady=10)
 
