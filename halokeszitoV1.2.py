@@ -101,7 +101,7 @@ class HalozatGeneraloGrafikusFelulettel:
         ttk.Button(adatmappa_vaz, text="Keresés", command=self.publikaciogyujtemeny_mappa_megadasa).pack(side='right')
 
         # Adat betöltés gomb
-        ttk.Button(adatlap_vaz, text="Publikációs adatok betöltése", command=self.adatbetoltes).pack(pady=20)
+        ttk.Button(adatlap_vaz, text="Publikációk betöltése", command=self.adatbetoltes).pack(pady=20)
 
         # Publikáció típusok exportálása gomb
         ttk.Button(adatlap_vaz, text="Publikáció típusok exportálása", command=self.publikacio_tipus_lementes).pack(pady=10)
@@ -407,9 +407,9 @@ class HalozatGeneraloGrafikusFelulettel:
 
 #idezesek szamat kiemelő metódus
     def szerzo_idezetteseg_szamlalo(self, publikaciok, szerzok):
-        #tesztelni kicsivel!
+        #Összeadja az összes publikációból a idézések számát és lementi a személyekhez, akik a karon dolgoznak.
         for mtid in szerzok:
-            szerzok[mtid]["Idezések_száma"] = 0
+            szerzok[mtid]["Hivatkozások_száma"] = 0
         for publikacio in publikaciok:
             hivatkozasok_szama=publikacio.get("Hivatkozások_száma",0)
             minden_szerzo=publikacio["Szerzőinformációk"]["Minden_szerző"]
@@ -417,7 +417,7 @@ class HalozatGeneraloGrafikusFelulettel:
             for szerzo in minden_szerzo:
                 mtid=szerzo.get("mtid")
                 if mtid and mtid in szerzok:
-                    szerzok[mtid]["Idezések_száma"]+=hivatkozasok_szama
+                    szerzok[mtid]["Hivatkozások_száma"]+=hivatkozasok_szama
 
         return  szerzok
 
