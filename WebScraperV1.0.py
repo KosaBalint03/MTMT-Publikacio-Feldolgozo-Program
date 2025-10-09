@@ -29,6 +29,7 @@ url_sablon_V2 = "https://m2.mtmt.hu/api/publication?page=1&cond=authors%3Bin%3B{
 #Nagy sablon (2500)
 url_sablon_nagy_V2= "https://m2.mtmt.hu/api/publication?page=1&cond=authors%3Bin%3B{}&sort=publishedYear%2Cdesc&size=2500"
 # V2 link a végleges, pár infó: default format=json, default cite_type=2 %3B--> ; karakter
+#snippet "Mélység"--> depth=0 (Snippet mélység)
 
 # Fő programrész
 kimeneti_mappa_neve=input("Kérlek add meg a kimeneti mappa nevét: ")
