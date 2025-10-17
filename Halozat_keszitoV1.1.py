@@ -795,9 +795,9 @@ Alkalmazott szürések:
 - Közös publikációszám szűrés: {'Igen' if self.kozos_publikacio_szuro.get() else 'Nem'}
 
 HÁLÓZAT STATISZTIKÁK:
-Szerzők száma: {minden_szerzo_szama}
-  - Kari szerzők száma: {kari_szerzok_szama}
-  - Külsős szerzők száma: {kulsos_szerzok_szama}
+Szerzők/Csomópontok száma: {minden_szerzo_szama}
+  - Kari szerzők/Csomópontok száma: {kari_szerzok_szama}
+  - Külsős szerzők/Csomópontok száma: {kulsos_szerzok_szama}
 Összes egyedi együtműködések száma: {egyuttmukodesek_szama}
 Hálózat súlya: {osszes_sulyozott_egyuttmukodesek_szama}
 
