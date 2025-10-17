@@ -2,6 +2,7 @@ import pandas
 import requests
 import os
 
+# pandas, os, requests leírva dolgozatban [2025.10.17: 15:53]
 # Excel fájl kezelése
 excel_forras= input("Kérlek add meg a kari oktatók adatait tartalmazó excel fájl nevét: ")
 
