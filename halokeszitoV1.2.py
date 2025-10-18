@@ -8,6 +8,7 @@ from itertools import combinations
 import threading
 
 #os, pandas leírva dolgozatban, többi hátravan! [2025.10.17 15:54]
+#json leírva: [2025.10.18 12:13] collections: 14:25, ittertools 14:40
 
 #gyors jegyzet: mitől lesz kari a kari hálózat( oktatók mint csomópont). ha egy műben van kari oktató ,akkor az felkerül a feldogozott publikációk közé, és figyelembe vesszük, és csomópontok( melyek az oktatók) csak akkor jön létre kapcsolat, ha van olyan publikáció melyen 2 kari személy legalább dolgozott.
 # tanszéki: csak azon publikációk szerepelnek, melyeken IKs szerzők dolgoztak, külsős személyt is tartalmazók nincsenek benne!( tisztán kari személyek általál készített publikációk)
