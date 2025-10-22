@@ -2,14 +2,14 @@ import pandas
 import requests
 import os
 
-# pandas, os, requests leírva dolgozatban [2025.10.17: 15:53]
+
 # Excel fájl kezelése
 excel_forras= input("Kérlek add meg a kari oktatók adatait tartalmazó excel fájl nevét: ")
 
 #excel_forras = "DEIK_Nevsor_1.4.xlsx"  régi megoldás(marad teszteléshez)
 excel_beolvasas_adatkeret = pandas.read_excel(excel_forras)
 
-# Feldolgozandó tanszékek (marad, mivel belső szűrést biztosít
+# Feldolgozandó tanszékek listája
 letoltendo_tanszekek = [
     "Információ Technológia Tanszék",
     "Adattudomány és Vizualizáció Tanszék",
