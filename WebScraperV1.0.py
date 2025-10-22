@@ -32,9 +32,11 @@ url_sablon_V2 = "https://m2.mtmt.hu/api/publication?page=1&cond=authors%3Bin%3B{
 url_sablon_nagy_V2= "https://m2.mtmt.hu/api/publication?page=1&cond=authors%3Bin%3B{}&sort=publishedYear%2Cdesc&size=2500"
 # V2 link a végleges, pár infó: default format=json,   / ez nem találom most default cite_type=2/ %3B--> ; karakter
 #snippet "Mélység"--> depth=0 (Snippet mélység)
+# 10018517 --> Ujvári Balázs azonostítója a 2000+ publikáció miatt
+
 
 # Fő programrész
-kimeneti_mappa_neve=input("Kérlek add meg a kimeneti mappa nevét: ")
+kimeneti_mappa_neve=input("Add meg a kimeneti mappa nevét: ")
 os.makedirs(kimeneti_mappa_neve, exist_ok=True)
 
 for index, sor in tisztitott_adatok.iterrows():
@@ -46,7 +48,7 @@ for index, sor in tisztitott_adatok.iterrows():
     os.makedirs(tanszek_mappa, exist_ok=True)
 
 #Stringként kezelt azonosító (összehasonlítás miatt)
-    if str(azonosito) == "10018517": # Ujvári Balázs azonostítója a 2000+ publikáció miatt  10018517
+    if str(azonosito) == "10018517":
         print(f"A program nem akadt meg, csak átlagosnál több idő szükséges a következő kutató ({azonosito} publikációinak kigyüjtéséhez.") # extra rész, tájékoztatás
         url = url_sablon_nagy_V2.format(azonosito)
     else:
