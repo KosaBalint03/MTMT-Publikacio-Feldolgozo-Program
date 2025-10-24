@@ -591,12 +591,9 @@ Kész az adatok betöltése!
 
     def tanszeki_halozat_generalas(self, publikaciok):
         #Kari hálózat generálása, tanszékre osztva
-
         tanszekek = {}
         egyuttmukodesek_szama = defaultdict(int)
-
         # Előfeldolgozás
-
         kari_tanszeknev_lower = {instancia.lower(): instancia for instancia in self.Kari_tanszekek_nevei}
 
         for publikacio in publikaciok:
@@ -610,7 +607,7 @@ Kész az adatok betöltése!
                 tanszek_nev = szerzo.get("Tanszék", "")
                 if not tanszek_nev:
                     # Tanszék nélküli szerző átugrása
-                     continue #break
+                     continue
 
                 # tanszék keresés
                 megtalalt = False
@@ -619,11 +616,11 @@ Kész az adatok betöltése!
                         # tanszék név használat excelből
                         szerzo["Parositott_tanszek"] = excel_talalat
                         megtalalt = True
-                        continue #break
+                        continue
 
                 if not megtalalt:
                     # Nem találtunk párosítható tanszéket
-                    continue #break
+                    continue
 
                 ervenyes_kari_szerzok.append(szerzo)
 
