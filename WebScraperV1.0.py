@@ -35,7 +35,7 @@ url_sablon_nagy_V2= "https://m2.mtmt.hu/api/publication?page=1&cond=authors%3Bin
 # 10018517 --> Ujvári Balázs azonostítója a 2000+ publikáció miatt
 
 
-# Fő programrész
+# Webes elérés kezdete
 kimeneti_mappa_neve=input("Add meg a kimeneti mappa nevét: ")
 os.makedirs(kimeneti_mappa_neve, exist_ok=True)
 
