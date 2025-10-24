@@ -9,13 +9,15 @@ import threading
 
 #os, pandas leírva dolgozatban, többi hátravan! [2025.10.17 15:54]
 #json leírva: [2025.10.18 12:13] collections: 14:25, ittertools 14:40
+#threading és tkinter: 2025.10.19 15:44
 
 #gyors jegyzet: mitől lesz kari a kari hálózat( oktatók mint csomópont). ha egy műben van kari oktató ,akkor az felkerül a feldogozott publikációk közé, és figyelembe vesszük, és csomópontok( melyek az oktatók) csak akkor jön létre kapcsolat, ha van olyan publikáció melyen 2 kari személy legalább dolgozott.
 # tanszéki: csak azon publikációk szerepelnek, melyeken IKs szerzők dolgoztak, külsős személyt is tartalmazók nincsenek benne!( tisztán kari személyek általál készített publikációk)
 # lényege: koncepciónális egyeztetés!( biztosítás hogy jól van-e megcsinálva
 
-#plus note: et al.. csak egy felületi formátum, a fájlban benne van minden személy , még aki el van takarva et al. által is!!
+#plusz megjegyzés: A felületen(mtmt felületén) et al.. csak egy felületi formátum, a fájlban benne van minden személy , még aki el van takarva et al. által, azok is!!
 
+#megírásra való felkészítés: 2025.10.24. 12:07
 
 class HalozatGeneraloGrafikusFelulettel:
     def __init__(self, root):
@@ -41,6 +43,7 @@ class HalozatGeneraloGrafikusFelulettel:
         self.rovid_adatelemzes = None
         self.adatalap_mappa_eleresi_utvonal = None
         self.kari_excel_eleresi_utvonal = None
+#ez itt kimarad fent( nem fontos milyen változói vannak)
 
         # Adatok Tárolására szolgáló változók
         self.publikaciok = [] #publákicókat tartalmazó tömb
@@ -232,9 +235,11 @@ class HalozatGeneraloGrafikusFelulettel:
             self.szerzolapok_mappa = publikaciogyujtemeny_mappanev
             self.adatalap_mappa_eleresi_utvonal.configure(text=os.path.basename(publikaciogyujtemeny_mappanev))
 
+# kezelői felületet létrhozó kódból NEM mutatok be semmit mert felesleges+ túl hosszú
+
     def adatbetoltes(self):
         #Excelből lévő szerző adatok beolvasása
-
+# ez jó lehet [NEED]
         if not self.excel_fajl or not self.szerzolapok_mappa:
             messagebox.showerror("Hiba", "Kérlek válaszd ki az Excel és az adatlapokat tartalmazó mappát!")
             return
@@ -254,8 +259,9 @@ class HalozatGeneraloGrafikusFelulettel:
             # Tanszékekről készítünk egy "szótárat"
             for _, row in kari_adatlap.iterrows():
                 mtid = row[mtid_oszlop]
+
                 if pd.notna(mtid):
-                    mtid_erteke = int(mtid) #nem lehet string wrap, majd fix., 3.13.7 miatt warning .5-ben jó.
+                    mtid_erteke = int(mtid) #nem lehet string wrap, majd fix., 3.13.7 miatt warning .5-ben jó. -> jó mert már tuti van értéke(pd.notna), és annak számnak kell lennie
                     self.karhoz_tartozo_mtidk.add(mtid_erteke)
                     # Excelből a szerzőnevek kivétele és szótárba helyezése
                     excel_szerzo_teljesnev = str(row[nev_oszlop]).strip()
@@ -280,9 +286,10 @@ class HalozatGeneraloGrafikusFelulettel:
 
         except Exception as e:
             messagebox.showerror("Hiba!", f"Nem sikerült az adatok betöltése: {str(e)}")
+#adatbetöltő vége
 
     def publikaciok_osszegyujtese(self, root_folder):
-        # publikációk feldolgozása
+        # publikációk feldolgozása [NEED]
         kesz_idk = set()
         minden_publikacio = []
 
@@ -304,7 +311,7 @@ class HalozatGeneraloGrafikusFelulettel:
 
     @staticmethod
     def mtmtfajl_olvasasa(fajl_eleresi_utvonala):
-        #beolvassa az mtmt-ről leszedett szerzői fájlt
+        #beolvassa az mtmt-ről leszedett szerzői publikációkat tartalmazó fájlt
         with open(fajl_eleresi_utvonala, "r", encoding="utf-8") as fajl:
             beolvasott_adat = json.load(fajl)
             return beolvasott_adat.get("content", [])
@@ -342,10 +349,7 @@ class HalozatGeneraloGrafikusFelulettel:
                 "Kari_szerzők": szerzo_informaciok["Kari_szerzők"],
                 "Minden_szerző": szerzo_informaciok["Minden_szerző"]
             },
-            "kulcsszavak": [kulcsszo.get("label") for kulcsszo in publikacio.get("keywords", [])], #  jelenleg nem használt
-            "Nyelv": publikacio.get("languages", [{}])[0].get("label", "Ismeretlen"), #  jelenleg nem használt
-            "Kategória": publikacio.get("category", {}).get("label"), # jelenleg nem használt
-            "Hivatkozások_száma": publikacio.get("citationCount", 0), #  jelenleg nem használt
+            "Hivatkozások_száma": publikacio.get("citationCount", 0),
         }
 
 
