@@ -742,7 +742,7 @@ Kész az adatok betöltése!
                 messagebox.showinfo("Kész", "A publikációtípusok sikeresen exportálva lettek!")
 
         except Exception as e:
-            messagebox.showerror("Hiba", f"Hiba történt a publikációtípusok exportálás közben: {str(e)}")
+            messagebox.showerror("Hiba", f"Hiba történt a publikációtípusok exportálása közben: {str(e)}")
 
         # Cytoscape fájlok generálása
     @staticmethod
