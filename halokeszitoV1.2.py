@@ -349,6 +349,9 @@ class HalozatGeneraloGrafikusFelulettel:
                 "Kari_szerzők": szerzo_informaciok["Kari_szerzők"],
                 "Minden_szerző": szerzo_informaciok["Minden_szerző"]
             },
+            "kulcsszavak": [kulcsszo.get("label") for kulcsszo in publikacio.get("keywords", [])], #  jelenleg nem használt
+            "Nyelv": publikacio.get("languages", [{}])[0].get("label", "Ismeretlen"), #  jelenleg nem használt
+            "Kategória": publikacio.get("category", {}).get("label"), # jelenleg nem használt
             "Hivatkozások_száma": publikacio.get("citationCount", 0),
         }
 
@@ -372,10 +375,10 @@ class HalozatGeneraloGrafikusFelulettel:
 
             #Név kiemelése az excelből
             if szerzo_mtid in self.kari_szerzonevek:
-                # A nevet szerzo kari oktatók esetében az excelből vegye ki.
+                # A szerző nevét, kari oktatók esetében az excelből vegye ki.
                 teljes_nev = self.kari_szerzonevek[szerzo_mtid]
 
-                #nevek szétvágásap
+                #nevek szétvágása
                 nev_reszek = teljes_nev.split(' ',1)
                 if len(nev_reszek) > 1:
                     vezeteknev = nev_reszek[0]
@@ -385,11 +388,10 @@ class HalozatGeneraloGrafikusFelulettel:
                     keresztnev = ""
                     teljes_nev = f"{vezeteknev} {keresztnev}".strip()
             else:
-                # Ha nem kari személyről van szó akkor az mtmt-s névrészekből rakja össze szerzo nevet.
+                # Ha nem kari személyről van szó akkor az mtmt-s névrészekből rakja össze a szerző nevét.
                 vezeteknev = szerzo.get("familyName", "")
                 keresztnev = szerzo.get("givenName", "")
                 teljes_nev = f"{vezeteknev} {keresztnev}".strip()
-
             szerzo_informaciok = {
                 "Név": teljes_nev,
                 "Vezetéknév": vezeteknev,
@@ -398,9 +400,7 @@ class HalozatGeneraloGrafikusFelulettel:
                 "felelősszerző-e": szerzo.get("corresponding", False), # a felesős szerző-e( true/false szerzo fájlban)
                 "Tanszék": tanszek_vegleges
             }
-
             minden_szerzo_listaja.append(szerzo_informaciok)
-
             if szerzo_mtid in self.karhoz_tartozo_mtidk:
                 kari_szerzok_szama += 1
                 kari_szerzok_listaja.append(szerzo_informaciok)
