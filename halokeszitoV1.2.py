@@ -130,8 +130,9 @@ class HalozatGeneraloGrafikusFelulettel:
         halozattipus_vaz = ttk.Frame(halozatgeneralas_vaz)
         halozattipus_vaz.pack(fill='x', pady=(0, 15))
         ttk.Radiobutton(halozattipus_vaz, text="Teljes hálózat (Minden publikáció figyelembe vétele)", variable=self.halozat_tipusa, value="teljes").pack(anchor='w') #legyen vegyes hálózat (kari és nem kari együttműködések hálózata)
-        ttk.Radiobutton(halozattipus_vaz, text="Tanszékekre bontott kari hálózat (Csak a kari szerzők publikációnak figyelembe vételével készül, ahol Tanszékek a csomópontok)", variable=self.halozat_tipusa, value="tanszek_halozat").pack(anchor='w')
         ttk.Radiobutton(halozattipus_vaz, text="Oktatókra bontott kari hálózat (Csak a kari szerzők publikációnak figyelembe vételével készül, ahol a Szerzők a csomópontok)", variable=self.halozat_tipusa, value="Kari_hálózat").pack(anchor='w')
+        ttk.Radiobutton(halozattipus_vaz, text="Tanszékekre bontott kari hálózat (Csak a kari szerzők publikációnak figyelembe vételével készül, ahol Tanszékek a csomópontok)", variable=self.halozat_tipusa, value="tanszek_halozat").pack(anchor='w')
+
 
         self.csak_valodi_publikaciok = tk.BooleanVar()
         ttk.Checkbutton(halozatgeneralas_vaz, text="Csak fontosabb tudományos művek feldolgozása",
@@ -530,11 +531,11 @@ Kész az adatok betöltése!
 
             if halozattipus == "teljes":
                 szerzok, egyuttmukodesek = self.tejles_halozat_generalas(szurt_publikaciok)
-            elif halozattipus == "tanszek_halozat":
-                # kari hálózat a tanszékekkel(csomópontok az IKs tanszékek
-                szerzok, egyuttmukodesek = self.tanszeki_halozat_generalas(szurt_publikaciok)
-            else:  # Kari hálózat személyekkel( csak IK-s személyek)
+            elif halozattipus == "Kari_hálózat":
+                 # Kari hálózat személyekkel( csak IK-s személyek)
                 szerzok, egyuttmukodesek = self.kari_halozat_generalas(szurt_publikaciok)
+            else:  # kari hálózat a tanszékekkel(csomópontok az IKs tanszékek)
+                szerzok, egyuttmukodesek = self.tanszeki_halozat_generalas(szurt_publikaciok)
 
             # közös publikációszám szűrő
             if self.kozos_publikacio_szuro.get():
