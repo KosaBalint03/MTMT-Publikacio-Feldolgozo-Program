@@ -197,7 +197,7 @@ class HalozatGeneraloGrafikusFelulettel:
     def rovidelemzes_lap_inicilaizalasa(self, notebook):
         eredmenyek_lap_vaz = ttk.Frame(notebook)
         notebook.add(eredmenyek_lap_vaz, text="Eredmények/Statisztika")
-        ttk.Label(eredmenyek_lap_vaz, text="Generálás eredménye:").pack(anchor='w', pady=(10, 5))
+        ttk.Label(eredmenyek_lap_vaz, text="Hálózatfájlok létrehozásának eredményei:").pack(anchor='w', pady=(10, 5))
         self.eredmenyek_szovege_vaz = tk.Text(eredmenyek_lap_vaz, height=20, width=70)
         self.eredmenyek_szovege_vaz.pack(fill='both', expand=True)
 
@@ -236,11 +236,9 @@ class HalozatGeneraloGrafikusFelulettel:
             self.szerzolapok_mappa = publikaciogyujtemeny_mappanev
             self.adatalap_mappa_eleresi_utvonal.configure(text=os.path.basename(publikaciogyujtemeny_mappanev))
 
-# kezelői felületet létrhozó kódból NEM mutatok be semmit mert felesleges+ túl hosszú
 
     def adatbetoltes(self):
         #Excelből lévő szerző adatok beolvasása
-# ez jó lehet [NEED]
         if not self.excel_fajl or not self.szerzolapok_mappa:
             messagebox.showerror("Hiba", "Kérlek válaszd ki az Excel és az adatlapokat tartalmazó mappát!")
             return
@@ -248,10 +246,18 @@ class HalozatGeneraloGrafikusFelulettel:
         try:
             # Kari adatlap(Excel) betöltése
             kari_adatlap = pd.read_excel(self.excel_fajl, sheet_name="Munka1")
+
+            #tisztitott_adatok = kari_adatlap.dropna(subset=['Név','MTID (MTMT ID)', 'Tanszék'])
+            #tisztitott_adatok['MTID (MTMT ID)'] = tisztitott_adatok['MTID (MTMT ID)'].astype(int)
+
+
             # MTID Beolvasás
             nev_oszlop = kari_adatlap.columns[0] #A oszlop
             mtid_oszlop = kari_adatlap.columns[1]  # B oszlop , 1-es index(2.sor)
-            tanszek_oszlop = kari_adatlap.columns[3]
+            # mtid_oszlop = tisztitott_adatok.columns[1]  # B oszlop , 1-es index(2.sor) lehet nincs is columns1-je, csak 0 mert substet-csak az mtid mező..Ű
+            #lehetne subsetje is, amiből vesszük ki az adatokat.. de mostmár mindegy. jó így is.
+            tanszek_oszlop = kari_adatlap.columns[3] #2. oszlop lenne "talán" a tanszék a subset-ben.
+
 
             self.karhoz_tartozo_mtidk = set()
             self.kari_tanszekek = {}
@@ -259,10 +265,12 @@ class HalozatGeneraloGrafikusFelulettel:
 
             # Tanszékekről készítünk egy "szótárat"
             for _, row in kari_adatlap.iterrows():
+            #for _, row in kari_adatlap.iterrows():---> lehetne subset-je a nagy lapnak, és csak abban dolgozzunk..
                 mtid = row[mtid_oszlop]
 
                 if pd.notna(mtid):
-                    mtid_erteke = int(mtid) #nem lehet string wrap, majd fix., 3.13.7 miatt warning .5-ben jó. -> jó mert már tuti van értéke(pd.notna), és annak számnak kell lennie
+                    mtid_erteke = int(mtid) #nem lehet string wrap, 3.13.7-ban warning .5-ben jó., de amugy jó lesz, mert már tuti van értéke(pd.notna), és annak számnak kell lennie
+                    #hiba mert nincs normális érték tisztítás/ vizsgálat, csak erőltetett típuskonverzió. jó ,de nem szereti..
                     self.karhoz_tartozo_mtidk.add(mtid_erteke)
                     # Excelből a szerzőnevek kivétele és szótárba helyezése
                     excel_szerzo_teljesnev = str(row[nev_oszlop]).strip()
@@ -510,7 +518,7 @@ Kész az adatok betöltése!
         #Hálózat generálás más szálon való futtatás
 
         if not self.publikaciok:
-            messagebox.showerror("Hiba!", "Kérlek tölsd be az adatokat a generálás elött!")
+            messagebox.showerror("Hiba!", "Kérlek tölsd be az adatokat a hálózatfájlok létrehozása elött!")
             return
 
         self.halozat_generalas_gomb_vaz.configure(state='disabled')
@@ -549,7 +557,7 @@ Kész az adatok betöltése!
             self.root.after(0, self.eredmenyek_frissitese, szerzok, egyuttmukodesek, szurt_publikaciok, halozattipus)
 
         except Exception as e:
-            error_msg = f"Hálózat generálás sikertelen: {str(e)}"
+            error_msg = f"Hálózatfájlok elkészítése sikertelen: {str(e)}"
             self.root.after(0, lambda msg=error_msg: messagebox.showerror("Hiba!", msg))
         finally:
             self.root.after(0, self.generalas_befelyezese)
@@ -597,6 +605,19 @@ Kész az adatok betöltése!
         # Előfeldolgozás
         kari_tanszeknev_lower = {instancia.lower(): instancia for instancia in self.Kari_tanszekek_nevei}
 
+        szerzo_hivatkozasok = {}
+        for mtid in self.karhoz_tartozo_mtidk:
+            szerzo_hivatkozasok[mtid] = 0
+
+        for publikacio in publikaciok:
+            hivatkozasok_szama = publikacio.get("Hivatkozások_száma", 0)
+            minden_szerzo = publikacio["Szerzőinformációk"]["Minden_szerző"]
+
+            for szerzo in minden_szerzo:
+                mtid = szerzo.get("mtid")
+                if mtid and mtid in szerzo_hivatkozasok:
+                    szerzo_hivatkozasok[mtid] += hivatkozasok_szama
+
         for publikacio in publikaciok:
             if publikacio["Szerzőinformációk"]["Kari_szerzők_száma"] == 0:
                 continue
@@ -617,7 +638,7 @@ Kész az adatok betöltése!
                         # tanszék név használat excelből
                         szerzo["Parositott_tanszek"] = excel_talalat
                         megtalalt = True
-                        continue
+                        break # continue
 
                 if not megtalalt:
                     # Nem találtunk párosítható tanszéket
@@ -641,18 +662,25 @@ Kész az adatok betöltése!
                             "Vezetéknév": tanszek.split()[-1] if tanszek != "Ismeretlen Tanszék" else "Ismeretlen",
                             "Keresztnév": tanszek.split()[0] if tanszek != "Ismeretlen Tanszék" else "Ismeretlen",
                             "Publikációk_száma": 0,
+                            "Hivatkozások_száma": 0,
                             "Kari-e": True,
                             "Tanszék": {tanszek}
                         }
                     tanszekek[tanszek]["Publikációk_száma"] += 1
+
+                szerzo_mtid =szerzo.get("mtid")
+                if szerzo_mtid and szerzo_mtid in szerzo_hivatkozasok:
+                    tanszekek[tanszek]["Hivatkozások_száma"]+=szerzo_hivatkozasok[szerzo_mtid]
 
                 # tanszék-együttműködések elkészítése
                 if len(pub_tanszekek) > 1:
                     for tanszek1, tanszek2 in combinations(pub_tanszekek, 2):
                         el_kulcs = tuple(sorted([tanszek1, tanszek2]))
                         egyuttmukodesek_szama[el_kulcs] += 1
+
         # tanszéki adatok frissitése idézések számával
-        tanszekek = self.szerzo_idezetteseg_szamlalo(publikaciok, tanszekek)
+        #tanszekek = self.szerzo_idezetteseg_szamlalo(publikaciok, tanszekek)
+
         return tanszekek, egyuttmukodesek_szama
 
     def kari_halozat_generalas(self, publikaciok):
@@ -704,8 +732,10 @@ Kész az adatok betöltése!
                 egyuttmukodesek_szama[el_kulcs] += 1
 
             # szerzok frissitése idézések számával
-            szerzok = self.szerzo_idezetteseg_szamlalo(publikaciok, szerzok)
+        szerzok = self.szerzo_idezetteseg_szamlalo(publikaciok, szerzok)
+
         return szerzok, egyuttmukodesek_szama
+
     def publikacio_tipus_lementes(self):
 
         if not self.publikaciok:
@@ -814,7 +844,7 @@ Kész az adatok betöltése!
 
 #végső eredmények kiíratása
         eredmenyek = f"""
-=== HÁLÓZAT GENERÁLÁS EREDMÉNYEI ===
+=== HÁLÓZAT KÉSZÍTÉS EREDMÉNYEI ===
 
 Hálózat típusa: {halozat_tipusa.replace('_', ' ').title()}
 Használt publikációk száma: {len(szurt_publikaciok)}
@@ -829,7 +859,7 @@ Szerzők száma: {minden_szerzo_szama}
 Összes egyedi együtműködések száma: {egyuttmukodesek_szama}
 Hálózat súlya: {osszes_sulyozott_egyuttmukodesek_szama}
 
-TOP 5 LEGTERMÉKYENEBB SZERZŐ:
+TOP 5 LEGTÖBB PUBLIKÁCIÓVAL RENDELKEZŐ SZERZŐ:
 """
 
         for mtid, info in legtermekenyebb:
@@ -841,7 +871,7 @@ TOP 5 LEGTERMÉKYENEBB SZERZŐ:
             nev2 = szerzok[author2]["Név"]
             eredmenyek += f"  {nev1} <-> {nev2}: {count} együttműködés\n"
 
-        eredmenyek += f"\nGenerált fájlok: {self.kimeneti_fajl_prefixje.get()}_csomopontok.csv, {self.kimeneti_fajl_prefixje.get()}_elek.csv"
+        eredmenyek += f"\nElkészítésés fájlok: {self.kimeneti_fajl_prefixje.get()}_csomopontok.csv, {self.kimeneti_fajl_prefixje.get()}_elek.csv"
 
         self.eredmenyek_szovege_vaz.delete(1.0, tk.END)
         self.eredmenyek_szovege_vaz.insert(1.0, eredmenyek)
